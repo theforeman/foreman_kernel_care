@@ -1,5 +1,5 @@
 {
-  "name": "foreman_plugin_template",
+  "name": "foreman_kernel_care",
   "version": "1.0.0",
   "description": "DESCRIPTION",
   "main": "index.js",
@@ -15,10 +15,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/theforeman/foreman_plugin_template.git"
+    "url": "git+https://github.com/theforeman/foreman_kernel_care.git"
   },
   "bugs": {
-    "url": "http://projects.theforeman.org/projects/foreman_plugin_template/issues"
+    "url": "http://projects.theforeman.org/projects/foreman_kernel_care/issues"
   },
   "peerDependencies": {
     "@theforeman/vendor": ">= 6.0.0"

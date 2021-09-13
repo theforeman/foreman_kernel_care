@@ -11,7 +11,7 @@ import { FOREMAN_STORYBOOK } from './Constants';
 
 const ExtendedEmptyState = ({ header }) => {
   // AJAX request using useAPI hook
-  const { response: { description }, status } = useAPI('get', '/foreman_plugin_template/plugin_template_description')
+  const { response: { description }, status } = useAPI('get', '/foreman_kernel_care/plugin_template_description')
   
 
   const storybookBtn = (

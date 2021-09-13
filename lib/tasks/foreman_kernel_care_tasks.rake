@@ -1,7 +1,7 @@
 require 'rake/testtask'
 
 # Tasks
-namespace :foreman_plugin_template do
+namespace :foreman_kernel_care do
   namespace :example do
     desc 'Example Task'
     task task: :environment do
@@ -13,7 +13,7 @@ end
 # Tests
 namespace :test do
   desc 'Test ForemanPluginTemplate'
-  Rake::TestTask.new(:foreman_plugin_template) do |t|
+  Rake::TestTask.new(:foreman_kernel_care) do |t|
     test_dir = File.expand_path('../../test', __dir__)
     t.libs << 'test'
     t.libs << test_dir
@@ -23,11 +23,11 @@ namespace :test do
   end
 end
 
-namespace :foreman_plugin_template do
+namespace :foreman_kernel_care do
   task :rubocop do
     begin
       require 'rubocop/rake_task'
-      RuboCop::RakeTask.new(:rubocop_foreman_plugin_template) do |task|
+      RuboCop::RakeTask.new(:rubocop_foreman_kernel_care) do |task|
         task.patterns = ["#{ForemanPluginTemplate::Engine.root}/app/**/*.rb",
                          "#{ForemanPluginTemplate::Engine.root}/lib/**/*.rb",
                          "#{ForemanPluginTemplate::Engine.root}/test/**/*.rb"]
@@ -36,13 +36,13 @@ namespace :foreman_plugin_template do
       puts 'Rubocop not loaded.'
     end
 
-    Rake::Task['rubocop_foreman_plugin_template'].invoke
+    Rake::Task['rubocop_foreman_kernel_care'].invoke
   end
 end
 
-Rake::Task[:test].enhance ['test:foreman_plugin_template']
+Rake::Task[:test].enhance ['test:foreman_kernel_care']
 
 load 'tasks/jenkins.rake'
 if Rake::Task.task_defined?(:'jenkins:unit')
-  Rake::Task['jenkins:unit'].enhance ['test:foreman_plugin_template', 'foreman_plugin_template:rubocop']
+  Rake::Task['jenkins:unit'].enhance ['test:foreman_kernel_care', 'foreman_kernel_care:rubocop']
 end

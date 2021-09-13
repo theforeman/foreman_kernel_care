@@ -1,7 +1,7 @@
-require File.expand_path('../lib/foreman_plugin_template/version', __FILE__)
+require File.expand_path('../lib/foreman_kernel_care/version', __FILE__)
 
 Gem::Specification.new do |s|
-  s.name        = 'foreman_plugin_template'
+  s.name        = 'foreman_kernel_care'
   s.version     = ForemanPluginTemplate::VERSION
   s.license     = 'GPL-3.0'
   s.authors     = ['TODO: Your name']
