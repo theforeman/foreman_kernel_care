@@ -4,9 +4,9 @@ Gem::Specification.new do |s|
   s.name        = 'foreman_kernel_care'
   s.version     = ForemanKernelCare::VERSION
   s.license     = 'GPL-3.0'
-  s.authors     = ['TODO: Your name']
-  s.email       = ['TODO: Your email']
-  s.homepage    = 'TODO'
+  s.authors     = ['Maxim Petukhov']
+  s.email       = ['maxmol27@gmail.com']
+  s.homepage    = 'https://github.com/maccelf/foreman_kernel_care'
   s.summary     = 'Plugin for KernelCare'
   # also update locale/gemspec.rb
   s.description = 'Plugin for KernelCare'
