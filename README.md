@@ -1,6 +1,6 @@
 # ForemanKernelCare
 
-*Introdction here*
+Plugin for KernelCare
 
 ## Installation
 
@@ -9,11 +9,11 @@ for how to install Foreman plugins
 
 ## Usage
 
-*Usage here*
+Nothing to do, just install plugin
 
 ## TODO
 
-*Todo list here*
+- Check not only presence of the kernelcare package on host, but also the applied kernel version from kernelcare
 
 ## Contributing
 
@@ -21,7 +21,7 @@ Fork and send a Pull Request. Thanks!
 
 ## Copyright
 
-Copyright (c) *year* *your name*
+Copyright (c) 2021 maccelf
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
