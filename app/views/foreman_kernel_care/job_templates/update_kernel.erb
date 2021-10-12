@@ -1,0 +1,15 @@
+<%#
+kind: job_template
+name: Update kernel
+model: JobTemplate
+job_category: Commands
+description_format: "Run yum update kernel"
+provider_type: SSH
+feature: update_kernel
+%>
+<%
+  unless @host.operatingsystem.family == 'Redhat'
+    render_error(N_('Unsupported operating system for this host.'))
+  end
+%>
+yum update -y kernel*

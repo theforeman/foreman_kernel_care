@@ -1,3 +1,5 @@
+require 'foreman_kernel_care/remote_execution'
+
 module ForemanKernelCare
   class Engine < ::Rails::Engine
     isolate_namespace ForemanKernelCare
@@ -23,10 +25,7 @@ module ForemanKernelCare
         register_global_js_file 'global'
 
         # Add a new role called 'Discovery' if it doesn't exist
-        role 'ForemanKernelCare', [:view_foreman_kernel_care]
-
-        # add dashboard widget
-        widget 'foreman_kernel_care_widget', name: N_('KernelCare widget'), sizex: 4, sizey: 1
+        role 'Foreman KernelCare', [:view_job_templates]
       end
     end
 
