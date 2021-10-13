@@ -13,7 +13,7 @@ module ForemanKernelCare
           next
         end
 
-        traces << { host_id: self.id, application: trace, helper: attributes[:helper], app_type: attributes[:type] }
+        traces << { host_id: id, application: trace, helper: attributes[:helper], app_type: attributes[:type] }
       end
       host_traces.delete_all
       Katello::HostTracer.import(traces, validate: false)

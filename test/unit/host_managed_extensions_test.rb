@@ -13,8 +13,8 @@ module ForemanKernelCare
       super
       @tracer_json = {
         "kernel": {
-          "type": "static",
-          "helper": "You will have to reboot your computer"
+          "type": 'static',
+          "helper": 'You will have to reboot your computer'
         }
       }
     end
