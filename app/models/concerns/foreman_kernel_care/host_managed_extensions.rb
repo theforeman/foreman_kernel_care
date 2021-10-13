@@ -5,7 +5,7 @@ module ForemanKernelCare
       tracer_profile.each do |trace, attributes|
         next if attributes[:helper].blank?
 
-        if trace == 'kernel' && kernelcare?
+        if trace.to_s == 'kernel' && kernelcare?
           composer = ::JobInvocationComposer.for_feature(:update_kernel, self)
           composer.triggering.mode = :future
           composer.trigger!
