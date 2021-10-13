@@ -21,9 +21,6 @@ module ForemanKernelCare
       Foreman::Plugin.register :foreman_kernel_care do
         requires_foreman '>= 2.4.0'
 
-        # Add Global files for extending foreman-core components and routes
-        register_global_js_file 'global'
-
         # Add a new role called 'Discovery' if it doesn't exist
         role 'Foreman KernelCare', [:view_job_templates]
       end
@@ -45,12 +42,6 @@ module ForemanKernelCare
       Rake::Task['db:seed'].enhance do
         ForemanKernelCare::Engine.load_seed
       end
-    end
-
-    initializer 'foreman_kernel_care.register_gettext', after: :load_config_initializers do |_app|
-      locale_dir = File.join(File.expand_path('../../..', __FILE__), 'locale')
-      locale_domain = 'foreman_kernel_care'
-      Foreman::Gettext::Support.add_text_domain locale_domain, locale_dir
     end
   end
 end
