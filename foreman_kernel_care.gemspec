@@ -1,4 +1,4 @@
-require File.expand_path('../lib/foreman_kernel_care/version', __FILE__)
+require File.expand_path('lib/foreman_kernel_care/version', __dir__)
 
 Gem::Specification.new do |s|
   s.name        = 'foreman_kernel_care'
@@ -14,6 +14,6 @@ Gem::Specification.new do |s|
   s.files = Dir['{app,config,db,lib,locale,webpack}/**/*'] + ['LICENSE', 'Rakefile', 'README.md', 'package.json']
   s.test_files = Dir['test/**/*'] + Dir['webpack/**/__tests__/*.js']
 
-  s.add_development_dependency 'rubocop'
   s.add_development_dependency 'rdoc'
+  s.add_development_dependency 'rubocop'
 end

@@ -14,7 +14,7 @@ namespace :test do
 end
 
 namespace :foreman_kernel_care do
-  task :rubocop do
+  task rubocop: :environment do
     begin
       require 'rubocop/rake_task'
       RuboCop::RakeTask.new(:rubocop_foreman_kernel_care) do |task|
@@ -22,7 +22,7 @@ namespace :foreman_kernel_care do
                          "#{ForemanKernelCare::Engine.root}/lib/**/*.rb",
                          "#{ForemanKernelCare::Engine.root}/test/**/*.rb"]
       end
-    rescue
+    rescue StandardError
       puts 'Rubocop not loaded.'
     end
 
