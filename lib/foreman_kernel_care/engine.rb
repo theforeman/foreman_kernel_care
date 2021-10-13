@@ -5,17 +5,7 @@ module ForemanKernelCare
     isolate_namespace ForemanKernelCare
     engine_name 'foreman_kernel_care'
 
-    config.autoload_paths += Dir["#{config.root}/app/controllers/concerns"]
-    config.autoload_paths += Dir["#{config.root}/app/helpers/concerns"]
     config.autoload_paths += Dir["#{config.root}/app/models/concerns"]
-    config.autoload_paths += Dir["#{config.root}/app/overrides"]
-
-    # Add any db migrations
-    initializer 'foreman_kernel_care.load_app_instance_data' do |app|
-      ForemanKernelCare::Engine.paths['db/migrate'].existent.each do |path|
-        app.config.paths['db/migrate'] << path
-      end
-    end
 
     initializer 'foreman_kernel_care.register_plugin', :before => :finisher_hook do |_app|
       Foreman::Plugin.register :foreman_kernel_care do
@@ -30,8 +20,6 @@ module ForemanKernelCare
     config.to_prepare do
 
       begin
-        Host::Managed.send(:include, ForemanKernelCare::HostExtensions)
-        HostsHelper.send(:include, ForemanKernelCare::HostsHelperExtensions)
         Katello::Concerns::HostManagedExtensions.send(:prepend, ForemanKernelCare::HostManagedExtensions)
       rescue => e
         Rails.logger.warn "ForemanKernelCare: skipping engine hook (#{e})"
