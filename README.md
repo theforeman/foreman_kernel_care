@@ -1,6 +1,6 @@
 # ForemanKernelCare
 
-Plugin for KernelCare
+This plugin removes kernel [trace](https://theforeman.org/plugins/katello/3.18/user_guide/tracer/index.html) if [KernelCare](https://www.kernelcare.com/product/) package is installed on host
 
 ## Installation
 
@@ -10,10 +10,6 @@ for how to install Foreman plugins
 ## Usage
 
 Nothing to do, just install plugin
-
-## TODO
-
-- Check not only presence of the kernelcare package on host, but also the applied kernel version from kernelcare
 
 ## Contributing
 
