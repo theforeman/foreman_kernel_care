@@ -9,7 +9,7 @@ module ForemanKernelCare
 
     initializer 'foreman_kernel_care.register_plugin', :before => :finisher_hook do |_app|
       Foreman::Plugin.register :foreman_kernel_care do
-        requires_foreman '>= 2.4.0'
+        requires_foreman '>= 1.19.0'
 
         # Add a new role called 'Discovery' if it doesn't exist
         role 'Foreman KernelCare', [:view_job_templates]
