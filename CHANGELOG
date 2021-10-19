@@ -1,0 +1,17 @@
+2021-10-19  Maxim Petukhov <maxmol27@gmail.com>
+  * Add dependencies
+  * 1.0.0-alfa
+
+2021-10-13  Maxim Petukhov <maxmol27@gmail.com>
+  * Add test
+  * Remove non used boilerplate
+
+2021-10-12  Maxim Petukhov <maxmol27@gmail.com>
+  * Add test
+  * Add run job template "update_kernel" on host when import tracer profile
+  * Add new seeds for the template "update_kernel"
+  * Add new template "update_kernel" to run the command `yum update kernel*`
+
+2021-09-21  Maxim Petukhov <maxmol27@gmail.com>
+  * Override import tracer profile method
+  * Initial KernelCare plugin template

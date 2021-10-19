@@ -8,11 +8,13 @@ Gem::Specification.new do |s|
   s.email       = ['maxmol27@gmail.com']
   s.homepage    = 'https://github.com/maccelf/foreman_kernel_care'
   s.summary     = 'Plugin for KernelCare'
-  # also update locale/gemspec.rb
-  s.description = 'Plugin for KernelCare'
+  s.description = 'This plugin removes kernel trace if KernelCare package is installed on host'
 
-  s.files = Dir['{app,config,db,lib,locale,webpack}/**/*'] + ['LICENSE', 'Rakefile', 'README.md', 'package.json']
-  s.test_files = Dir['test/**/*'] + Dir['webpack/**/__tests__/*.js']
+  s.files = Dir['{app,db,lib}/**/*'] + ['LICENSE', 'Rakefile', 'README.md']
+  s.test_files = Dir['test/**/*']
+
+  s.add_dependency 'katello', '>= 3.8.0'
+  s.add_dependency 'foreman_remote_execution', '>= 1.5.6'
 
   s.add_development_dependency 'rdoc'
   s.add_development_dependency 'rubocop'
