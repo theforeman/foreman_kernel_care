@@ -19,6 +19,7 @@ module ForemanKernelCare
     # Include concerns in this config.to_prepare block
     config.to_prepare do
       Katello::Concerns::HostManagedExtensions.prepend ForemanKernelCare::HostManagedExtensions
+      ForemanTasks::Api::TasksController.prepend ForemanKernelCare::ForemanTasks
     rescue StandardError => e
       Rails.logger.warn "ForemanKernelCare: skipping engine hook (#{e})"
     end
