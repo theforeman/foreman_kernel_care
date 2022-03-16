@@ -7,4 +7,9 @@ description_format: "Get patched kernel version"
 provider_type: SSH
 feature: kernel_version
 %>
-/usr/bin/kcare-uname -r
+<%
+  unless @host.installed_packages.select { |package| package.name == 'kernelcare' }.empty?
+    render_error(N_('Unsupported host.'))
+  end
+%>
+/usr/bin/kcarectl --uname
