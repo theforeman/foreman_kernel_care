@@ -1,5 +1,16 @@
 module ForemanKernelCare
   module HostManagedExtensions
+    def import_package_profile(simple_packages)
+      if kernelcare?
+        composer = ::JobInvocationComposer.for_feature(:kernel_version, self)
+        composer.triggering.mode = :future
+        composer.trigger!
+      end
+
+      found = import_package_profile_in_bulk(simple_packages)
+      sync_package_associations(found.map(&:id).uniq)
+    end
+
     def import_tracer_profile(tracer_profile)
       traces = []
       tracer_profile.each do |trace, attributes|
