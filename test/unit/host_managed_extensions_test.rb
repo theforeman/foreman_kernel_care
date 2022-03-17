@@ -2,15 +2,40 @@ require 'test_plugin_helper'
 
 module ForemanKernelCare
   class HostManagedExtensionsTestBase < ActiveSupport::TestCase
+  end
+
+  class HostInstalledPackagesTest < HostManagedExtensionsTestBase
     def setup
-      template = FactoryBot.create(:job_template, name: 'Update kernel')
-      template.sync_feature('update_kernel')
+      feature = RemoteExecutionFeature.register('kernel_version', 'Kernel version')
+      template = FactoryBot.create(:job_template, name: 'Kernel versionl')
+      template.sync_feature(feature.label)
+
+      @host = FactoryBot.create(:host, :with_kernelcare)
+      package_json = {:name => "kernel", :version => "1", :release => "1.el7", :arch => "x86_64", :epoch => "1",
+                      :nvra => "kernel-1-1.el7.x86_64"}
+      @host.import_package_profile([::Katello::Pulp::SimplePackage.new(package_json)])
+      @nvra = 'kernel-1-1.el7.x86_64'
+      @host.reload
+    end
+
+    def test_update_kernel_version
+      version = '2'
+      release = '2.el7'
+      @host.update_kernel_version(version, release)
+      kernel_package = @host.installed_packages.where(name: 'kernel').first
+
+      assert_not_equal kernel_package.nvra, @nvra
+      assert_equal kernel_package.version, version
+      assert_equal kernel_package.release, release
     end
   end
 
   class HostTracerTest < HostManagedExtensionsTestBase
     def setup
-      super
+      feature = RemoteExecutionFeature.register('update_kernel', 'Update Kernel')
+      template = FactoryBot.create(:job_template, name: 'Update kernel')
+      template.sync_feature(feature.label)
+
       @tracer_json = {
         "kernel": {
           "type": 'static',

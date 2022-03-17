@@ -1,0 +1,15 @@
+<%#
+kind: job_template
+name: Kernel version
+model: JobTemplate
+job_category: Commands
+description_format: "Get patched kernel version"
+provider_type: SSH
+feature: kernel_version
+%>
+<%
+  unless @host.installed_packages.select { |package| package.name == 'kernelcare' }.empty?
+    render_error(N_('Unsupported host.'))
+  end
+%>
+/usr/bin/kcarectl --uname

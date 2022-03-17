@@ -11,6 +11,12 @@ module ForemanKernelCare
         N_('Run Update kernel'),
         :description => N_('Runs Update kernel')
       )
+
+      RemoteExecutionFeature.register(
+        :kernel_version,
+        N_('Get patched kernel version'),
+        :description => N_('Get patched kernel version')
+      )
     end
   end
 end
