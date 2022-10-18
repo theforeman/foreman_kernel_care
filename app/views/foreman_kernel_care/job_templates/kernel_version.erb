@@ -8,7 +8,7 @@ provider_type: SSH
 feature: kernel_version
 %>
 <%
-  unless @host.installed_packages.select { |package| package.name == 'kernelcare' }.empty?
+  unless @host.installed_packages.map{ |package| package.name }.include?('kernelcare')
     render_error(N_('Unsupported host.'))
   end
 %>
