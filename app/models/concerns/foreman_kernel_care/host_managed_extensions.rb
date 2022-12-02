@@ -48,6 +48,8 @@ module ForemanKernelCare
       sync_kernel_associations(found.map(&:id).uniq, delete_ids)
     end
 
+    protected
+
     def sync_kernel_associations(new_patched_kernel_ids, delete_ids)
       ::Katello::Util::Support.active_record_retry do
         table_name = host_installed_packages.table_name
@@ -68,8 +70,6 @@ module ForemanKernelCare
         end
       end
     end
-
-    protected
 
     def kernelcare?
       !installed_packages.select { |package| package.name == 'kernelcare' }.empty?
