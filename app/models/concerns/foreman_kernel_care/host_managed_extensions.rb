@@ -1,5 +1,6 @@
 module ForemanKernelCare
   module HostManagedExtensions
+
     def import_package_profile(simple_packages)
       if kernelcare?
         composer = ::JobInvocationComposer.for_feature(:kernel_version, self)
@@ -7,28 +8,27 @@ module ForemanKernelCare
         composer.trigger!
       end
 
-      found = import_package_profile_in_bulk(simple_packages)
-      sync_package_associations(found.map(&:id).uniq)
+      super(simple_packages)
     end
 
     def import_tracer_profile(tracer_profile)
-      traces = []
-      tracer_profile.each do |trace, attributes|
-        next if attributes[:helper].blank?
-
-        if trace.to_s == 'kernel' && kernelcare?
-          composer = ::JobInvocationComposer.for_feature(:update_kernel, self)
-          composer.triggering.mode = :future
-          composer.trigger!
-
-          next
+      if kernelcare?
+        new_tracer_profile = {}
+        tracer_profile.each do |trace, attributes|
+          if trace.to_s == 'kernel'
+            composer = ::JobInvocationComposer.for_feature(:update_kernel, self)
+            composer.triggering.mode = :future
+            composer.trigger!
+          else
+            new_tracer_profile[trace] = attributes
+          end
         end
-
-        traces << { host_id: id, application: trace, helper: attributes[:helper], app_type: attributes[:type] }
+        unless new_tracer_profile.empty?
+          super(new_tracer_profile)
+        end
+      else
+        super(tracer_profile)
       end
-      host_traces.delete_all
-      Katello::HostTracer.import(traces, validate: false)
-      update_trace_status
     end
 
     def update_kernel_version(version, release)
