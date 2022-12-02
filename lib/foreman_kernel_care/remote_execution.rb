@@ -5,6 +5,10 @@ require 'foreman_remote_execution'
 module ForemanKernelCare
   # Dependencies related with the remote execution plugin
   class Engine < ::Rails::Engine
+    config.to_prepare do
+      ForemanKernelCare::Engine.register_rex_feature
+    end
+
     def self.register_rex_feature
       RemoteExecutionFeature.register(
         :update_kernel,
