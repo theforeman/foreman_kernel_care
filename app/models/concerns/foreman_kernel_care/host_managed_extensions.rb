@@ -23,9 +23,7 @@ module ForemanKernelCare
             new_tracer_profile[trace] = attributes
           end
         end
-        unless new_tracer_profile.empty?
-          super(new_tracer_profile)
-        end
+        super(new_tracer_profile)
       else
         super(tracer_profile)
       end
