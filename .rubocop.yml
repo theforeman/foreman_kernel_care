@@ -6,6 +6,8 @@ AllCops:
   TargetRailsVersion: 6.0
   Exclude:
     - 'node_modules/**/*'
+    - 'vendor/**/*'
+    - 'test/**/*'
 
 Layout/ArgumentAlignment:
   EnforcedStyle: with_fixed_indentation
@@ -33,4 +35,10 @@ Style/FrozenStringLiteralComment:
 
 # Support both ruby19 and hash_rockets
 Style/HashSyntax:
+  Enabled: false
+
+Metrics/MethodLength:
+  Max: 15
+
+Metrics/AbcSize:
   Enabled: false
