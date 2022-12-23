@@ -17,7 +17,7 @@ module ForemanKernelCare
     end
 
     # make sure the plugin is initialized before katello loads the host extensions
-    initializer 'foreman_kernel_care.load_kernelcare_override', :before => :finisher_hook, :after => [ 'katello.register_plugin', 'foreman_tasks.register_plugin' ] do
+    initializer 'foreman_kernel_care.load_kernelcare_override', :before => :finisher_hook, :after => ['katello.register_plugin', 'foreman_tasks.register_plugin'] do
       ::Katello::Concerns::HostManagedExtensions.prepend ForemanKernelCare::HostManagedExtensions
       ::ForemanTasks::Api::TasksController.prepend ForemanKernelCare::ForemanTasks
     end

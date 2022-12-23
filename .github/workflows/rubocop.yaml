@@ -1,0 +1,22 @@
+name: Rubocop
+on:
+  pull_request:
+  push:
+    branches:
+      - master
+jobs:
+  rubocop:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Remove Katello from dependencies
+        run: |
+          sed -i.bak "s/s.add_dependency/# s.add_dependency/g" foreman_kernel_care.gemspec
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 2.5
+          bundler-cache: true
+      - name: Execute rubocop
+        run: |
+          bundle exec rubocop
