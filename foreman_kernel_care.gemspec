@@ -13,6 +13,8 @@ Gem::Specification.new do |s|
   s.files = Dir['{app,db,lib}/**/*'] + ['LICENSE', 'Rakefile', 'README.md']
   s.test_files = Dir['test/**/*']
 
+  s.required_ruby_version = '>= 2.5.0'
+
   s.add_dependency 'foreman_remote_execution', '>= 1.5.6'
   s.add_dependency 'katello', '>= 3.8.0'
 
