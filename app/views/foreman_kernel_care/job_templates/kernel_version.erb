@@ -8,8 +8,8 @@ provider_type: SSH
 feature: kernel_version
 %>
 <%
-  unless @host.installed_packages.map{ |package| package.name }.include?('kernelcare')
+  unless @host.installed_packages.map{ |package| package.name }.include?('kernelcare') || @host.installed_debs.map{ |package| package.name }.include?('kernelcare')
     render_error(N_('Unsupported host.'))
   end
 %>
-/usr/bin/kcarectl --uname
+/usr/bin/kcarectl --uname && uname -r

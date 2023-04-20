@@ -3,13 +3,19 @@ kind: job_template
 name: Update kernel
 model: JobTemplate
 job_category: Commands
-description_format: "Run yum update kernel"
+description_format: "Update kernel"
 provider_type: SSH
 feature: update_kernel
 %>
-<%
-  unless @host.operatingsystem.family == 'Redhat'
-    render_error(N_('Unsupported operating system for this host.'))
-  end
-%>
-yum update -y kernel*
+
+<%= snippet 'pkg_manager' %>
+
+<% if @host.operatingsystem.family == 'Redhat' -%>
+KERNEL_NAME="kernel*"
+<% elsif @host.operatingsystem.family == 'Debian' -%>
+KERNEL_NAME="linux-image-generic"
+<% else -%>
+<%= render_error(N_('Unsupported operating system for this host.')) %>
+<% end %>
+
+$PKG_MANAGER_UPGRADE $KERNEL_NAME && /usr/bin/kcarectl --update

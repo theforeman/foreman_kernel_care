@@ -25,6 +25,9 @@ Rails:
 Style/Alias:
   EnforcedStyle: prefer_alias_method
 
+Style/ClassAndModuleChildren:
+  Enabled: false
+
 # Don't enforce documentation
 Style/Documentation:
   Enabled: false
@@ -37,8 +40,17 @@ Style/FrozenStringLiteralComment:
 Style/HashSyntax:
   Enabled: false
 
+Metrics/CyclomaticComplexity:
+  Max: 10
+
+Metrics/PerceivedComplexity:
+  Max: 10
+
 Metrics/MethodLength:
   Max: 15
+
+Metrics/ModuleLength:
+  Max: 120
 
 Metrics/AbcSize:
   Enabled: false
