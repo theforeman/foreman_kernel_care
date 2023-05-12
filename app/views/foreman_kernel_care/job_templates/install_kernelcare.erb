@@ -1,0 +1,10 @@
+<%#
+kind: job_template
+name: LivePatching - Install Kernelcare
+model: JobTemplate
+job_category: LivePatching
+description_format: Install kernelcare package
+provider_type: Ansible
+%>
+
+<%= render_template('Package Action - Ansible Default', :state => 'latest', :name => 'kernelcare') %>
