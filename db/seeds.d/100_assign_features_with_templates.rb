@@ -10,14 +10,14 @@ User.as_anonymous_admin do
       ForemanKernelCare::Engine.register_rex_feature
     end
     JobTemplate.without_auditing do
-      module_template = JobTemplate.find_by(name: 'Update kernel')
+      module_template = JobTemplate.find_by(name: 'LivePatching - Update kernel')
       if module_template && !Rails.env.test? && Setting[:remote_execution_sync_templates]
         module_template.sync_feature('update_kernel')
         module_template.organizations << Organization.unscoped.all if module_template.organizations.empty?
         module_template.locations << Location.unscoped.all if module_template.locations.empty?
       end
 
-      module_template = JobTemplate.find_by(name: 'Kernel version')
+      module_template = JobTemplate.find_by(name: 'LivePatching - Kernel version')
       if module_template && !Rails.env.test? && Setting[:remote_execution_sync_templates]
         module_template.sync_feature('kernel_version')
         module_template.organizations << Organization.unscoped.all if module_template.organizations.empty?
