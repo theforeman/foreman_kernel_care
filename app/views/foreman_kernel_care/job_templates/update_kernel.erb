@@ -8,14 +8,10 @@ provider_type: SSH
 feature: update_kernel
 %>
 
-<%= snippet 'pkg_manager' %>
+<%
+  unless @host.installed_packages.map{ |package| package.name }.include?('kernelcare') || @host.installed_debs.map{ |package| package.name }.include?('kernelcare')
+    render_error(N_('Unsupported host.'))
+  end
+%>
 
-<% if @host.operatingsystem.family == 'Redhat' -%>
-KERNEL_NAME="kernel*"
-<% elsif @host.operatingsystem.family == 'Debian' -%>
-KERNEL_NAME="linux-image-generic"
-<% else -%>
-<%= render_error(N_('Unsupported operating system for this host.')) %>
-<% end %>
-
-$PKG_MANAGER_UPGRADE $KERNEL_NAME && /usr/bin/kcarectl --update
+/usr/bin/kcarectl --update
