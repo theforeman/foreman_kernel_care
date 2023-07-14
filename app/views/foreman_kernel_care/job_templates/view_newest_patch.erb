@@ -1,11 +1,10 @@
 <%#
 kind: job_template
-name: LivePatching - Kernel version
+name: LivePatching - View newest Patch
 model: JobTemplate
 job_category: LivePatching - Script Default
 description_format: "Get patched kernel version"
 provider_type: script
-feature: kernel_version
 %>
 <%
   unless @host.installed_packages.map{ |package| package.name }.include?('kernelcare') || @host.installed_debs.map{ |package| package.name }.include?('kernelcare')
