@@ -12,4 +12,8 @@ feature: kernel_version
     render_error(N_('Unsupported host.'))
   end
 %>
-/usr/bin/kcarectl --uname && uname -r
+
+echo -n "Installed kernel version: "
+uname -r
+echo -n "Patched kernel version: "
+/usr/bin/kcarectl --uname

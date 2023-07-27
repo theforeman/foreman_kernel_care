@@ -9,7 +9,10 @@ module ForemanKernelCare
         callback = payload[:callback]
         foreman_task = foreman_tasks.find { |task| task.id == callback[:task_id] }
         next unless foreman_task.action.include?('Get patched kernel version')
-        kcare, kernel = payload[:data].to_unsafe_h['result'].first['output'].split("\n")
+        complete_output = ''
+        result = payload[:data].to_unsafe_h['result']
+        result.each { |x| complete_output += x['output'] }
+        kcare, kernel = complete_output.split(/\n/).values_at(1, 3)
         version, release = kcare.strip.split('-')
         next if version.empty? || release.empty?
         job_invocation = ::JobInvocation.where(:task_id => foreman_task.parent_task_id).first
