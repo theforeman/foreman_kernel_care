@@ -12,7 +12,9 @@ module ForemanKernelCare
         complete_output = ''
         result = payload[:data].to_unsafe_h['result']
         result.each { |x| complete_output += x['output'] }
-        kcare, kernel = complete_output.split(/\n/).values_at(1, 3)
+        kernel, kcare = complete_output.split(/\n/)
+        kernel = kernel.gsub('Installed kernel version: ', '')
+        kcare = kcare.gsub('Patched kernel version: ', '')
         version, release = kcare.strip.split('-')
         next if version.empty? || release.empty?
         job_invocation = ::JobInvocation.where(:task_id => foreman_task.parent_task_id).first
