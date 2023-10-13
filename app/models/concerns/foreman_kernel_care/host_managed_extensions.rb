@@ -48,8 +48,13 @@ module ForemanKernelCare
       end
     end
 
+    def kernelcare?
+      !installed_packages.select { |package| package.name == 'kernelcare' }.empty? ||
+        !installed_debs.select { |package| package.name == 'kernelcare' }.empty?
+    end
+
     class ::Host::Managed::Jail < Safemode::Jail
-      allow :installed_debs
+      allow :installed_debs, :kernelcare?
     end
 
     protected
@@ -137,11 +142,6 @@ module ForemanKernelCare
       end
       self.installed_deb_ids = new_installed_debs.concat(new_patched_kernel_ids)
       save!
-    end
-
-    def kernelcare?
-      !installed_packages.select { |package| package.name == 'kernelcare' }.empty? ||
-        !installed_debs.select { |package| package.name == 'kernelcare' }.empty?
     end
   end
 end
