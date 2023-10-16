@@ -10,7 +10,7 @@ feature: update_kernel
 
 <%
   unless @host.installed_packages.map{ |package| package.name }.include?('kernelcare') || @host.installed_debs.map{ |package| package.name }.include?('kernelcare')
-    render_error(N_('Unsupported host.'))
+    render_error(N_('The "kernelcare" package is not installed on your managed host which is required by this job template.'))
   end
 %>
 
