@@ -3,7 +3,7 @@ module ForemanKernelCare
     extend ActiveSupport::Concern
 
     def import_deb_package_profile(profile)
-    if @host.kernelcare?
+      if @host.kernelcare?
         composer = ::JobInvocationComposer.for_feature(:kernel_version, @host)
         composer.triggering.mode = :future
         composer.trigger!
