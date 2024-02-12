@@ -18,7 +18,7 @@ module ForemanKernelCare
       package_json = { :name => 'kernel', :version => '1',
                        :release => '1.el7', :arch => 'x86_64', :epoch => '1',
                        :nvra => 'kernel-1-1.el7.x86_64' }
-      host.import_package_profile([::Katello::Pulp::SimplePackage.new(package_json)])
+      host.import_package_profile([::Katello::SimplePackage.new(package_json)])
       nvra = 'kernel-1-1.el7.x86_64'
       host.reload
       version = '2'

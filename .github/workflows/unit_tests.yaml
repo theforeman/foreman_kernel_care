@@ -1,76 +1,25 @@
 name: Unit tests
+
 on:
   push:
     branches: [ "master" ]
   pull_request:
     branches: [ "master" ]
 
-defaults:
-  run:
-    working-directory: /projects/foreman
+concurrency:
+  group: ${{ github.ref_name }}-${{ github.workflow }}
+  cancel-in-progress: true
 
 jobs:
-  test_ruby:
-    defaults:
-      run:
-        working-directory: /projects/foreman
-    env:
-      PGHOST: postgres
-      PGUSER: foreman
-      PGPASS: foreman
-      RAILS_ENV: test
-      host: postgres
-      WORKDIR: /projects/foreman
-      BUNDLE_PATH: vendor/bundle
-      GIT_COMMITTER_NAME: "gh_actions"
-      GIT_COMMITTER_EMAIL: "gh_actions@rh_cloud.foreman"
-    strategy:
-      fail-fast: false
-      matrix:
-        image_version: [6.0.43]
+  rubocop:
+    name: Rubocop
+    uses: theforeman/actions/.github/workflows/rubocop.yml@v0
 
-    runs-on: ubuntu-latest
-    container:
-      image: ghcr.io/theforeman/tfm_plugin_test:${{ matrix.image_version }}
-
-    services:
-      postgres:
-        image: quay.io/jomitsch/postgres-with-evr
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-        env:
-          POSTGRES_USER: foreman
-          POSTGRES_PASSWORD: foreman
-
-    steps:
-      - name: Checkout foreman_kernel_care repo
-        uses: actions/checkout@v3
-        with:
-          path: ${{ github.workspace }}/projects/foreman_kernel_care
-      - name: Fix git config
-        run: |
-          cp -Rf $GITHUB_WORKSPACE/projects/foreman_kernel_care /projects/
-          cd /projects/foreman
-          echo "gemspec :path => '../foreman_kernel_care'" > bundler.d/foreman_kernel_care.local.rb
-          /usr/bin/entrypoint.sh git config --global user.name $GIT_COMMITTER_NAME
-          /usr/bin/entrypoint.sh git config --global user.email $GIT_COMMITTER_EMAIL
-      - name: remove foreman_rh_cloud and dependencies
-        working-directory: /projects/foreman
-        run: |
-          rm bundler.d/foreman_rh_cloud.local.rb
-      - name: Run tests suite
-        run: |
-          cd /projects/foreman
-          ls -al /usr/bin
-          /usr/bin/entrypoint.sh chmod +rx /usr/bin/run_tests.sh
-          /usr/bin/entrypoint.sh touch /usr/bin/setup_env.sh
-          /usr/bin/entrypoint.sh chmod +rx /usr/bin/setup_env.sh
-          /usr/bin/entrypoint.sh head -n -10 /usr/bin/run_tests.sh > /usr/bin/setup_env.sh
-          /usr/bin/entrypoint.sh /usr/bin/setup_env.sh
-      - name: Run foreman_kernel_care tests
-        working-directory: /projects/foreman
-        run: |
-          /usr/bin/entrypoint.sh bundle exec rake test:foreman_kernel_care
+  test:
+    name: Ruby
+    needs: rubocop
+    uses: theforeman/actions/.github/workflows/foreman_plugin.yml@v0
+    with:
+      plugin: foreman_kernel_care
+      postgresql_container: ghcr.io/theforeman/postgresql-evr
+      test_existing_database: false

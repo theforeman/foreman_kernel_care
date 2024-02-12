@@ -86,7 +86,7 @@ module ForemanKernelCare
 
     def create_new_yum_kernel_packages(packages, version, release)
       new_kernels = packages.map do |p|
-        ::Katello::Pulp::SimplePackage.new({
+        ::Katello::SimplePackage.new({
           arch: p.arch,
           epoch: p.epoch,
           version: version,
