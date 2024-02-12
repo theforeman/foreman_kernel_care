@@ -16,7 +16,7 @@ Gem::Specification.new do |s|
   s.required_ruby_version = '>= 2.5.0'
 
   s.add_dependency 'foreman_remote_execution', '>= 1.5.6'
-  s.add_dependency 'katello', '>= 3.8.0'
+  s.add_dependency 'katello', '>= 4.8.0'
 
   s.add_development_dependency 'rdoc', '~> 6', '>= 6.3.1'
   s.add_development_dependency 'rubocop', '>= 0.87.0'

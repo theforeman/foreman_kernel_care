@@ -19,7 +19,7 @@ FactoryBot.modify do
           :epoch => '1',
           :nvra => 'kernelcare-2.54-1.el7.x86_64'
         }
-        host.import_package_profile([::Katello::Pulp::SimplePackage.new(package_json)])
+        host.import_package_profile([::Katello::SimplePackage.new(package_json)])
       end
     end
   end
