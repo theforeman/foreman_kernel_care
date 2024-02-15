@@ -6,7 +6,7 @@ Gem::Specification.new do |s|
   s.license     = 'GPL-3.0'
   s.authors     = ['Maxim Petukhov']
   s.email       = ['maxmol27@gmail.com']
-  s.homepage    = 'https://github.com/maccelf/foreman_kernel_care'
+  s.homepage    = 'https://github.com/theforeman/foreman_kernel_care'
   s.summary     = 'Plugin for KernelCare'
   s.description = 'This plugin removes kernel trace and update the kernel package version if KernelCare package is installed on host'
 
