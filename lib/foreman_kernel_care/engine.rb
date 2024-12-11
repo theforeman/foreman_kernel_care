@@ -10,10 +10,12 @@ module ForemanKernelCare
     config.autoload_paths += Dir["#{config.root}/app/models/concerns"]
     config.autoload_paths += Dir["#{config.root}/app/services/concerns"]
 
-    initializer 'foreman_kernel_care.register_plugin', :before => :finisher_hook do |_app|
-      Foreman::Plugin.register :foreman_kernel_care do
-        requires_foreman '>= 1.19.0'
-        role 'Foreman KernelCare', [:view_job_templates]
+    initializer 'foreman_kernel_care.register_plugin', :before => :finisher_hook do |app|
+      app.reloader.to_prepare do
+        Foreman::Plugin.register :foreman_kernel_care do
+          requires_foreman '>= 3.13'
+          role 'Foreman KernelCare', [:view_job_templates]
+        end
       end
     end
 
