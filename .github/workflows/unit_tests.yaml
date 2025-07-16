@@ -21,5 +21,4 @@ jobs:
     uses: theforeman/actions/.github/workflows/foreman_plugin.yml@v0
     with:
       plugin: foreman_kernel_care
-      postgresql_container: ghcr.io/theforeman/postgresql-evr
       test_existing_database: false
