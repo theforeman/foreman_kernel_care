@@ -1,11 +1,7 @@
 module ForemanKernelCare
   module HostManagedExtensions
     def import_package_profile(simple_packages)
-      if kernelcare?
-        composer = ::JobInvocationComposer.for_feature(:kernel_version, self)
-        composer.triggering.mode = :future
-        composer.trigger!
-      end
+      ::JobInvocationComposer.for_feature(:kernel_version, self).trigger! if kernelcare?
 
       super(simple_packages)
     end
@@ -15,9 +11,7 @@ module ForemanKernelCare
         new_tracer_profile = {}
         tracer_profile.each do |trace, attributes|
           if trace.to_s == 'kernel'
-            composer = ::JobInvocationComposer.for_feature(:update_kernel, self)
-            composer.triggering.mode = :future
-            composer.trigger!
+            ::JobInvocationComposer.for_feature(:update_kernel, self).trigger!
           else
             new_tracer_profile[trace] = attributes
           end
