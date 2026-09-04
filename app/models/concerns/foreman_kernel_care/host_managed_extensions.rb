@@ -1,5 +1,28 @@
 module ForemanKernelCare
   module HostManagedExtensions
+    # Packages shipped by kernel errata that track the kernel's version-release.
+    # Any one of these left behind keeps the whole erratum applicable, because
+    # Katello matches an erratum if ANY of its packages upgrades an installed one.
+    #
+    # Note perf/python-perf/python3-perf/bpftool/libperf/rtla/rv do NOT contain
+    # "kernel", so the previous name.include?('kernel') test could never reach them.
+    #
+    # This list spans EL7 through EL10 deliberately. Names differ by generation and
+    # a miss is silent: python3-perf is EL8+, python-perf is EL7, and the -matched
+    # variants only exist on EL10. Derive additions from the packages the errata
+    # actually ship on every generation in the fleet, not from one cohort.
+    KERNEL_FAMILY_PACKAGES = %w[
+      kernel kernel-core kernel-modules kernel-modules-core kernel-modules-extra
+      kernel-devel kernel-devel-matched kernel-headers kernel-abi-stablelists
+      kernel-modules-extra-matched kernel-modules-partner
+      kernel-debug kernel-debug-core kernel-debug-devel
+      kernel-debug-modules kernel-debug-modules-core kernel-debug-modules-extra
+      kernel-debug-devel-matched kernel-debug-modules-extra-matched
+      kernel-tools kernel-tools-libs kernel-tools-libs-devel kernel-cross-headers
+      kernel-uki-virt kernel-uki-virt-addons kernel-doc
+      bpftool perf python-perf python3-perf libperf rtla rv
+    ].freeze
+
     def import_package_profile(simple_packages)
       ::JobInvocationComposer.for_feature(:kernel_version, self).trigger! if kernelcare?
 
@@ -27,11 +50,14 @@ module ForemanKernelCare
 
       case operatingsystem.family
       when 'Redhat'
-        packages = find_yum_kernel_packages(old_version, old_release)
+        # Target the KernelCare-patched EVR, not the running kernel's, so subpackages
+        # versioned against a different kernel generation are covered too.
+        packages = find_yum_kernel_packages(version, release)
         return if packages.empty?
 
         delete_yum_pkgs(packages)
         create_new_yum_kernel_packages(packages, version, release)
+        regenerate_kernelcare_applicability
       when 'Debian'
         old_version = "#{old_version}-#{old_release}"
         new_version = "#{version}-#{release}"
@@ -39,6 +65,7 @@ module ForemanKernelCare
         return if packages.empty?
 
         create_new_deb_kernel_packages(packages, new_version, old_version)
+        regenerate_kernelcare_applicability
       end
     end
 
@@ -53,13 +80,76 @@ module ForemanKernelCare
 
     protected
 
-    def find_yum_kernel_packages(old_version, old_release)
-      installed_packages.select do |p|
-        p.name.include?('kernel') &&
-          p.name != 'kernelcare' &&
-          p.version == old_version &&
-          old_release.include?(p.release)
+    # The NEWEST installed package for each kernel-family name, but only where that
+    # newest is still older than the KernelCare-patched EVR. Taking newest-per-name
+    # (rather than every matching row) means older kernels stay in the host's
+    # inventory: Katello resolves applicability against the newest version per
+    # package name, so leaving them costs nothing and keeps the profile honest.
+    def find_yum_kernel_packages(new_version, new_release)
+      newest = {}
+      installed_packages.each do |p|
+        next unless KERNEL_FAMILY_PACKAGES.include?(p.name)
+
+        cur = newest[p.name]
+        newest[p.name] = p if cur.nil? || installed_older?(cur, p)
       end
+      newest.values.select { |p| rpm_evr_older?(p.version, p.release, new_version, new_release) }
+    end
+
+    # Epoch outranks version in rpm ordering, so picking the newest installed
+    # build of a name has to consider it: on EL7, python-perf carries epoch 1.
+    #
+    # Used only between two installed packages. The comparison against the
+    # KernelCare target above stays version-and-release only, deliberately: that
+    # target comes from `kcarectl --uname` and carries no epoch at all. Treating
+    # its absent epoch as 0 would make every epoch-bearing package look newer
+    # than the target, so it would never be rewritten, which is the exact
+    # opposite of what this code is for.
+    def installed_older?(older, newer)
+      eo = package_epoch(older)
+      en = package_epoch(newer)
+      return eo < en unless eo == en
+
+      rpm_evr_older?(older.version, older.release, newer.version, newer.release)
+    end
+
+    def package_epoch(pkg)
+      pkg.respond_to?(:epoch) ? pkg.epoch.to_i : 0
+    end
+
+    # The rewrite above is raw SQL, which bypasses the callbacks that would normally
+    # schedule this, so the applicability index would otherwise stay frozen at the
+    # host's last profile import.
+    def regenerate_kernelcare_applicability
+      ::ForemanTasks.async_task(
+        ::Actions::Katello::Applicability::Hosts::BulkGenerate,
+        :host_ids => [id]
+      )
+    rescue StandardError => e
+      ::Foreman::Logging.exception('foreman_kernel_care: applicability regeneration failed', e)
+    end
+
+    # rpmvercmp, sufficient for kernel EVRs. Compares version, then release.
+    def rpm_evr_older?(v1, r1, v2, r2)
+      cmp = rpm_vercmp(v1.to_s, v2.to_s)
+      cmp.zero? ? rpm_vercmp(r1.to_s, r2.to_s).negative? : cmp.negative?
+    end
+
+    def rpm_vercmp(a, b)
+      return 0 if a == b
+
+      x = a.scan(/\d+|[A-Za-z]+/)
+      y = b.scan(/\d+|[A-Za-z]+/)
+      x.zip(y).each do |p, q|
+        return 1 if q.nil?
+        next if p == q
+
+        pn = p.match?(/\A\d+\z/)
+        qn = q.match?(/\A\d+\z/)
+        return pn ? 1 : -1 if pn != qn
+        return pn ? (p.to_i <=> q.to_i) : (p <=> q)
+      end
+      x.length <=> y.length
     end
 
     def delete_yum_pkgs(packages)

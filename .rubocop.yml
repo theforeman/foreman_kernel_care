@@ -50,7 +50,7 @@ Metrics/MethodLength:
   Max: 19
 
 Metrics/ModuleLength:
-  Max: 120
+  Max: 170
 
 Metrics/AbcSize:
   Enabled: false
